@@ -1,7 +1,8 @@
 const basePath = 'type_of_jobs';
 
 export const actions = {
-  getAll({ queryParams }) {
+  getAll({}, payload = {}) {
+    const { queryParams } = payload;
     return this.$axios.$get(`/${basePath}/`);
   },
 
