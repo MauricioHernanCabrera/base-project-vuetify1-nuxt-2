@@ -17,9 +17,9 @@ export const mutations = {
 };
 
 export const actions = {
-  async login({ commit }, { bodyData }) {
+  async login({ commit }, { header }) {
     const config = {
-      auth: bodyData
+      auth: header
     };
 
     const res = await this.$axios.$post(`/${basePath}/token`, null, config);

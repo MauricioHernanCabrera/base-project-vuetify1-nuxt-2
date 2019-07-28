@@ -92,9 +92,9 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import sendRequest from "@/mixins/sendRequest";
-import handleForm from "@/mixins/handleForm";
+import { mapActions } from 'vuex';
+import sendRequest from '@/mixins/sendRequest';
+import handleForm from '@/mixins/handleForm';
 
 export default {
   mixins: [sendRequest, handleForm],
@@ -102,10 +102,10 @@ export default {
   async asyncData({ store }) {
     let array = [];
     try {
-      const res = await store.dispatch("example/getAll");
+      const res = await store.dispatch('example/getAll');
       array = res.data;
     } catch (error) {
-      store.dispatch("notification/handleError", error);
+      store.dispatch('notification/handleError', error);
     } finally {
       return {
         array
@@ -114,19 +114,19 @@ export default {
   },
 
   methods: {
-    ...mapActions("example", ["createOne", "deleteOne", "updateOne"]),
+    ...mapActions('example', ['createOne', 'deleteOne', 'updateOne']),
 
     async submitForm({ newValue, updateValue }) {
       const callbackTry = async () => {
         if (newValue) {
           const { data, message } = await this.createOne({
-            bodyData: newValue
+            body: newValue
           });
           this.array.push(data);
           return { message };
         } else {
           const { data, message } = await this.updateOne({
-            bodyData: {
+            body: {
               name: updateValue.name
             },
             pathParams: { _id: updateValue._id }

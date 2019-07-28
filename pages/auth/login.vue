@@ -85,7 +85,7 @@ export default {
 
     loginAndReport() {
       this.showPassword = false;
-      return this.login({ bodyData: this.form });
+      return this.login({ header: this.form });
     }
   }
 };

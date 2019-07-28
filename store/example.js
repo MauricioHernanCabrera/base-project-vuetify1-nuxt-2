@@ -9,15 +9,15 @@ export const actions = {
     return this.$axios.$get(`/${basePath}/${pathParams._id}/`);
   },
 
-  createOne({}, { bodyData, pathParams }) {
-    return this.$axios.$post(`/${basePath}/`, bodyData);
+  createOne({}, { body, pathParams }) {
+    return this.$axios.$post(`/${basePath}/`, body);
   },
 
   deleteOne({}, { pathParams }) {
     return this.$axios.$delete(`/${basePath}/${pathParams._id}/`);
   },
 
-  updateOne({}, { bodyData, pathParams }) {
-    return this.$axios.$patch(`/${basePath}/${pathParams._id}/`, bodyData);
+  updateOne({}, { body, pathParams }) {
+    return this.$axios.$patch(`/${basePath}/${pathParams._id}/`, body);
   }
 };
