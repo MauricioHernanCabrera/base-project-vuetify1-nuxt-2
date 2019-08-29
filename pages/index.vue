@@ -3,6 +3,7 @@
     <v-layout row wrap>
       <v-flex xs12>
         Home
+        <v-btn color="primary">h1</v-btn>
         <ul>
           <li>
             <nuxt-link to="/admin">admin</nuxt-link>

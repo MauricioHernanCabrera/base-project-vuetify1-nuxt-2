@@ -11,7 +11,7 @@
       bottom
     >
       {{ notification.message }}
-      <v-btn flat @click="DEACTIVE_NOTIFICATION">
+      <v-btn text @click="DEACTIVE_NOTIFICATION">
         <v-icon>cancel</v-icon>
       </v-btn>
     </v-snackbar>

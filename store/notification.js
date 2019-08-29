@@ -60,14 +60,14 @@ export const actions = {
       });
     }
 
-    if (response.status === 401) {
+    const { data = {} } = response;
+
+    if (response.status === 401 && !data.message) {
       return dispatch('setNotification', {
         color: 'warning',
-        message: '¡Necesitas permisos para realizar esta acción!'
+        message: data
       });
     }
-
-    const { data } = response;
 
     if (!data) {
       return dispatch('setNotification', {

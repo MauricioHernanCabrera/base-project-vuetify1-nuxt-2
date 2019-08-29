@@ -1,3 +1,5 @@
+const colors = require('vuetify/es5/util/colors').default;
+
 let API_URL = '';
 let FRONT_URL = '';
 
@@ -73,20 +75,21 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: ['~/assets/style/app.styl', '~/assets/styles.css'],
-  /*
+  css: ['~/assets/styles.css'],
+  /*rs
    ** Plugins to load before mounting the App
    */
   plugins: [
     '~/plugins/vue-components',
     '~/plugins/vuelidate',
-    '~/plugins/auth',
-    '~/plugins/vuetify'
+    '~/plugins/auth'
     // { src: '~/plugins/ga', ssr: false }
   ],
   /*
    ** Nuxt.js modules
    */
+  buildModules: ['@nuxtjs/vuetify'],
+
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
@@ -114,24 +117,31 @@ module.exports = {
     background_color: '#fff',
     theme_color: '#64B5F6'
   },
+
+  vuetify: {
+    customVariables: ['~/assets/variables.scss'],
+    theme: {
+      dark: true,
+      themes: {
+        dark: {
+          primary: colors.blue.lighten3,
+          accent: colors.grey.darken3,
+          secondary: colors.amber.darken3,
+          info: colors.teal.lighten1,
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3
+        }
+      }
+    }
+  },
   /*
    ** Build configuration
    */
   build: {
-    transpile: [/^vuetify/],
-
-    babel: {
-      plugins: [
-        [
-          'transform-imports',
-          {
-            vuetify: {
-              transform: 'vuetify/es5/components/${member}',
-              preventFullImport: true
-            }
-          }
-        ]
-      ]
-    }
+    /*
+     ** You can extend webpack config here
+     */
+    extend(config, ctx) {}
   }
 };

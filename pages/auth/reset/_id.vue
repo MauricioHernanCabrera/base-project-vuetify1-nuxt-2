@@ -1,19 +1,21 @@
 <template>
-  <v-form @submit.prevent="sendRequest(loginAndReport)">
+  <v-form @submit.prevent="sendRequest(postResetPasswordAndReport)">
     <v-card text max-width="350px">
       <v-card-text>
         <div class="my-5 d-flex justify-center">
           <logo original size="64" />
         </div>
-
-        <h1 class="font-weight-regular my-3 text-center">Inicia sesión con tu email</h1>
+      </v-card-text>
+      <v-card-text v-if="user" class="py-0">
+        <h1 class="font-weight-regular my-3 text-center">Recupera tu contraseña</h1>
 
         <v-text-field
-          v-model="form.email"
+          :value="user.email"
+          disabled
           prepend-icon="mdi-email-outline"
           label="Email"
           name="email"
-          type="email"
+          type="text"
         ></v-text-field>
 
         <v-text-field
@@ -22,39 +24,31 @@
           :append-icon="!showPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
           :type="showPassword ? 'text' : 'password'"
           name="password"
-          label="Contraseña"
+          label="Nueva contraseña"
           @click:append="showPassword = !showPassword"
         ></v-text-field>
-
-        <v-layout>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="grey"
-            text
-            small
-            class="subtitle-1 text-lowercase"
-            to="/auth/reset"
-          >¿Olvidaste tu contraseña?</v-btn>
-        </v-layout>
       </v-card-text>
 
-      <v-card-actions>
-        <v-btn text to="/auth/register">registrate</v-btn>
+      <v-card-text v-else>El token para recuperar tu contraseña expiro</v-card-text>
 
-        <v-spacer></v-spacer>
-
+      <v-card-actions v-if="user">
         <v-btn
           :disabled="$v.$invalid || loading"
           :loading="loading"
           type="submit"
           depressed
+          block
           color="primary"
         >
-          Iniciar sesión
+          Recuperar contraseña
           <span slot="loader" class="custom-loader">
             <v-icon light>cached</v-icon>
           </span>
         </v-btn>
+      </v-card-actions>
+
+      <v-card-actions v-else>
+        <v-btn to="/auth/reset" color="primary">volver a recuperar mi contraseña</v-btn>
       </v-card-actions>
     </v-card>
   </v-form>
@@ -71,29 +65,52 @@ export default {
 
   validations: {
     form: {
-      email: { required },
       password: { required }
+    }
+  },
+
+  async asyncData({ store, params }) {
+    let user = null;
+
+    try {
+      const res = await store.dispatch("auth/getResetPassword", {
+        queryParams: {
+          _id: params.id
+        }
+      });
+      user = res.data;
+    } catch (error) {
+      store.dispatch("notification/handleError", error);
+    } finally {
+      return {
+        user
+      };
     }
   },
 
   data() {
     return {
       form: {
-        email: "holas@gmail.com",
-        password: "123456789"
+        password: ""
       },
       showPassword: false
     };
   },
 
   methods: {
-    ...mapActions("auth", ["login", "createToken"]),
+    ...mapActions("auth", ["postResetPassword"]),
 
-    async loginAndReport() {
+    postResetPasswordAndReport() {
       this.showPassword = false;
-      const { email: username, password } = this.form;
-      await this.createToken({ header: { username, password } });
-      return this.login();
+      return this.postResetPassword({
+        body: {
+          password: this.form.password,
+          username: this.user.username
+        },
+        queryParams: {
+          _id: this.$route.params.id
+        }
+      });
     }
   }
 };

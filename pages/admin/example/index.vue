@@ -3,7 +3,7 @@
     <core-toolbar-admin title="Examples">
       <v-toolbar-items>
         <v-btn
-          flat
+          text
           @click="
             setDialog({
               title: 'Create example',

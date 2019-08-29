@@ -1,12 +1,12 @@
 <template>
-  <v-form @submit.prevent="sendRequest(loginAndReport)">
+  <v-form @submit.prevent="sendRequest(registerAndReport)">
     <v-card text max-width="350px">
       <v-card-text>
         <div class="my-5 d-flex justify-center">
           <logo original size="64" />
         </div>
 
-        <h1 class="font-weight-regular my-3 text-center">Inicia sesión con tu email</h1>
+        <h1 class="font-weight-regular my-3 text-center">Registrate con tu email</h1>
 
         <v-text-field
           v-model="form.email"
@@ -25,21 +25,10 @@
           label="Contraseña"
           @click:append="showPassword = !showPassword"
         ></v-text-field>
-
-        <v-layout>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="grey"
-            text
-            small
-            class="subtitle-1 text-lowercase"
-            to="/auth/reset"
-          >¿Olvidaste tu contraseña?</v-btn>
-        </v-layout>
       </v-card-text>
 
       <v-card-actions>
-        <v-btn text to="/auth/register">registrate</v-btn>
+        <v-btn text to="/auth/login">Inicia sesión</v-btn>
 
         <v-spacer></v-spacer>
 
@@ -50,7 +39,7 @@
           depressed
           color="primary"
         >
-          Iniciar sesión
+          Registrarme
           <span slot="loader" class="custom-loader">
             <v-icon light>cached</v-icon>
           </span>
@@ -64,6 +53,7 @@
 import { required } from "vuelidate/lib/validators";
 import { mapActions } from "vuex";
 import sendRequest from "@/mixins/sendRequest";
+
 export default {
   mixins: [sendRequest],
   middleware: "isAuth",
@@ -87,13 +77,28 @@ export default {
   },
 
   methods: {
-    ...mapActions("auth", ["login", "createToken"]),
+    ...mapActions("auth", ["register", "createToken", "login"]),
 
-    async loginAndReport() {
+    async registerAndReport() {
       this.showPassword = false;
-      const { email: username, password } = this.form;
-      await this.createToken({ header: { username, password } });
-      return this.login();
+      const { email, password } = this.form;
+      const resRegister = await this.register({
+        body: {
+          email,
+          password
+        }
+      });
+
+      await this.createToken({
+        header: {
+          username: email,
+          password
+        }
+      });
+
+      await this.login();
+
+      return resRegister;
     }
   }
 };
